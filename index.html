@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QRPress - QR Code &amp; Barcode Label Maker</title>
+  <meta name="description" content="Make QR codes and barcodes one by one or hundreds at once – Wi-Fi, contact card, links, Code 128, EAN-13, UPC – and print them on Avery labels or any paper. Works offline, no subscription.">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="icon-192.png" alt="" width="30" height="30"><span>QRPress</span></div>
+    <span class="spacer"></span>
+    <div class="top-btns">
+      <button id="printBtn" class="tb primary-tb" title="Print (Ctrl+P)">🖨 Print</button>
+      <button id="pngBtn" class="tb" title="Save the first code as a picture">🖼 Save picture</button>
+      <button id="moreBtn" class="tb">☰ More</button>
+      <button id="proBtn" class="pro-btn">★ Get Pro</button>
+    </div>
+    <div id="menu" class="menu" hidden>
+      <button id="zipBtn">🗂 Save all codes as pictures (ZIP) <span class="pro-tag">PRO</span></button>
+      <button id="svgBtn">✒ Save the first code as SVG (for designers) <span class="pro-tag">PRO</span></button>
+      <hr>
+      <button id="saveBtn">💾 Save my settings (file)</button>
+      <button id="openBtn">📂 Open saved settings…</button>
+      <hr>
+      <a href="help.html" target="_blank" rel="noopener">❓ How to use QRPress</a>
+      <a href="mailto:thequan03072002@gmail.com?subject=QRPress%20feedback">✉ Feedback &amp; support</a>
+      <a href="https://apps.microsoft.com/detail/9NP0RPZLKVFR" target="_blank" rel="noopener">More apps: LabelPress – labels for jars &amp; boxes</a>
+      <a href="https://apps.microsoft.com/detail/9PMB9K33JH3K" target="_blank" rel="noopener">More apps: MenuPress – menu maker</a>
+    </div>
+    <input id="openIn" type="file" accept=".json,application/json" hidden>
+    <input id="logoIn" type="file" accept="image/*" hidden>
+    <input id="listIn" type="file" accept=".csv,.txt,text/csv,text/plain" hidden>
+  </header>
+
+  <main class="layout">
+    <aside class="left">
+      <section class="tool">
+        <h2>🔳 What to make</h2>
+        <div class="seg" id="kindSeg">
+          <button data-k="qr">QR code</button><button data-k="c128">Barcode (Code 128)</button><button data-k="ean13">EAN-13 <span class="pro-tag">PRO</span></button><button data-k="upca">UPC-A <span class="pro-tag">PRO</span></button>
+        </div>
+        <div id="modeBox" class="seg small-seg">
+          <button data-m="list">🔗 Links &amp; text</button><button data-m="wifi">📶 Wi-Fi</button><button data-m="vcard">👤 Contact</button><button data-m="email">✉ Email</button><button data-m="sms">💬 SMS</button>
+        </div>
+      </section>
+      <section class="tool" id="listBox">
+        <div class="row"><h2>📋 Your codes</h2><span id="count" class="muted"></span></div>
+        <textarea id="list" rows="9" spellcheck="false"></textarea>
+        <p class="hint">One code per line. To show other text under the code: <code>code | text</code>, e.g. <code>https://mysite.com | Visit our website</code></p>
+        <div class="row-btns tight"><button id="listOpen" class="ghost small">📂 From a CSV / TXT file…</button><button id="seqToggle" class="ghost small">🔢 Numbers in a row…</button></div>
+        <div id="seqBox" class="seq" hidden>
+          <div class="three">
+            <label class="field">Start with<input id="seqPre" type="text" maxlength="20" placeholder="INV-"></label>
+            <label class="field">From<input id="seqFrom" type="number" min="0" value="1"></label>
+            <label class="field">To<input id="seqTo" type="number" min="0" value="30"></label>
+          </div>
+          <div class="row"><label class="field inline">Digits<input id="seqPad" type="number" min="1" max="12" value="4"></label><button id="seqAdd" class="primary small">Add to the list</button></div>
+        </div>
+      </section>
+      <section class="tool" id="wifiBox" hidden>
+        <h2>📶 Wi-Fi</h2>
+        <label class="field">Network name<input id="wSsid" type="text" maxlength="64" placeholder="Cafe Lotus Guest"></label>
+        <label class="field">Password<input id="wPass" type="text" maxlength="64"></label>
+        <div class="two"><label class="field">Security<select id="wSec"><option value="WPA">WPA / WPA2 / WPA3</option><option value="WEP">WEP</option><option value="nopass">No password</option></select></label>
+        <label class="check pad"><input id="wHid" type="checkbox"> Hidden network</label></div>
+      </section>
+      <section class="tool" id="vcardBox" hidden>
+        <h2>👤 Contact card</h2>
+        <label class="field">Name<input id="vName" type="text" maxlength="80" placeholder="Anna Nguyen"></label>
+        <label class="field">Company<input id="vOrg" type="text" maxlength="80"></label>
+        <div class="two"><label class="field">Phone<input id="vTel" type="text" maxlength="40"></label><label class="field">Email<input id="vMail" type="text" maxlength="80"></label></div>
+        <label class="field">Website<input id="vUrl" type="text" maxlength="120"></label>
+        <label class="field">Address<input id="vAdr" type="text" maxlength="160"></label>
+      </section>
+      <section class="tool" id="emailBox" hidden>
+        <h2>✉ Email</h2>
+        <label class="field">To<input id="eTo" type="text" maxlength="120" placeholder="hello@mysite.com"></label>
+        <label class="field">Subject<input id="eSub" type="text" maxlength="120"></label>
+        <label class="field">Message<input id="eBody" type="text" maxlength="400"></label>
+      </section>
+      <section class="tool" id="smsBox" hidden>
+        <h2>💬 Text message</h2>
+        <label class="field">Phone number<input id="sTel" type="text" maxlength="40"></label>
+        <label class="field">Message<input id="sBody" type="text" maxlength="300"></label>
+      </section>
+      <section class="tool">
+        <h2>🎨 Look</h2>
+        <label class="check"><input id="showText" type="checkbox"> Show text under the code</label>
+        <label class="field"><span>Text size <span id="tsVal" class="muted"></span></span><input id="tSize" type="range" min="60" max="160" step="10"></label>
+        <div class="row"><span class="field">Colour <span class="pro-tag">PRO</span></span><input id="color" type="color"></div>
+        <div class="row" id="logoRow"><span class="field">Logo in the middle <span class="pro-tag">PRO</span></span><span><button id="logoPick" class="ghost small">🖼 Choose…</button> <button id="logoClear" class="ghost small" hidden>✕</button></span></div>
+      </section>
+      <section class="tool">
+        <h2>🏷 Paper &amp; labels</h2>
+        <label class="field">Print on<select id="layout"></select></label>
+        <div id="gridOpts" class="two">
+          <label class="field">Code size (mm)<input id="gSize" type="number" min="15" max="120" step="5"></label>
+          <label class="field">Paper<select id="gPaper"><option value="letter">US Letter</option><option value="a4">A4</option></select></label>
+        </div>
+        <div id="customOpts" class="two">
+          <label class="field">Label width (mm)<input id="cW" type="number" min="15" max="200"></label>
+          <label class="field">Label height (mm)<input id="cH" type="number" min="10" max="200"></label>
+        </div>
+        <div class="two">
+          <label class="field">Copies of each code<input id="copies" type="number" min="1" max="500"></label>
+          <label class="field">Skip used labels<input id="skip" type="number" min="0" max="200"></label>
+        </div>
+      </section>
+      <p class="promise">🔒 Works on this PC, offline – nothing is uploaded.<br>💳 Pay once for Pro – no subscription.</p>
+      <p class="fb-note">💬 Something not working the way you want? Tell me – <a href="mailto:thequan03072002@gmail.com?subject=QRPress%20feedback">thequan03072002@gmail.com</a>. I read every message and improve the app.</p>
+    </aside>
+    <section class="stage">
+      <div class="stagebar"><span id="pageLine" class="muted"></span><span id="warn" class="warn"></span></div>
+      <div id="preview" class="preview"></div>
+    </section>
+  </main>
+
+  <dialog id="proDialog" class="dlg">
+    <h2>QRPress Pro</h2>
+    <p class="muted">One-time purchase. Yours forever on this Microsoft account. No subscription, ever.</p>
+    <ul class="pro-list">
+      <li><strong>Unlimited codes</strong> – the free version makes up to 10 different codes at a time</li>
+      <li><strong>EAN-13 and UPC-A</strong> product barcodes</li>
+      <li><strong>Your logo</strong> in the middle of the QR code, and <strong>your colour</strong></li>
+      <li><strong>All codes as pictures</strong> in one ZIP file, and SVG for designers</li>
+      <li><strong>No “Made with QRPress” line</strong> on the page</li>
+    </ul>
+    <p class="fb-note">💬 Something not working the way you want? Tell me – <a href="mailto:thequan03072002@gmail.com?subject=QRPress%20feedback">thequan03072002@gmail.com</a>. I read every message and improve the app.</p>
+    <p id="proMsg" class="pro-msg" hidden></p>
+    <div class="row-btns">
+      <button id="buyBtn" class="primary" autofocus>Unlock Pro</button>
+      <button id="restoreBtn" class="ghost">Restore purchase</button>
+      <button id="closePro" class="ghost">Not now</button>
+    </div>
+  </dialog>
+  <div id="toast" class="toast" hidden></div>
+  <div id="restartBar" class="restart" hidden>A new version of QRPress is ready. <button id="restartBtn" class="primary">Restart now</button></div>
+  <div id="printArea"></div>
+  <script src="qr.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

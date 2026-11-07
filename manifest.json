@@ -1,0 +1,16 @@
+{
+  "name": "QRPress - QR Code & Barcode Label Maker",
+  "short_name": "QRPress",
+  "description": "Make QR codes and barcodes one by one or hundreds at once – Wi-Fi, contact card, links, Code 128, EAN-13, UPC – and print them on labels. Works offline.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#4f46e5",
+  "theme_color": "#4f46e5",
+  "categories": ["business", "productivity", "utilities"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
